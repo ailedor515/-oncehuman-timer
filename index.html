@@ -200,8 +200,10 @@ id:Date.now(),
 type:type,
 name:name,
 sex:sex.value,
-gen:generation.value,
-memo:memo.value,
+rank:rank.value || "ランク未設定",
+trait:trait.value,
+trait.value="";
+memo.value="";
 end:Date.now()+h*3600000,
 hours:h,
 completed:false
@@ -274,7 +276,8 @@ tamer:tm.name,
 type:x.type,
 name:x.name,
 sex:x.sex,
-gen:x.gen,
+rank:x.rank,
+trait:x.trait,
 time:nowText()
 });
 data.stats[x.type]=(data.stats[x.type]||0)+1;
