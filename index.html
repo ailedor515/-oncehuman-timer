@@ -8,90 +8,25 @@
 <title>Once Human 繁殖管理</title>
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:#f8e7b0;
-  min-height:100vh;
-  background:#050806;
-}
-body:before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.9)),
-    url("C6B5C7E6-C0A5-4D30-9AB6-24B33C4FDD14.png") center/cover no-repeat;
-  z-index:-2;
-}
-body:after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at center,transparent 15%,rgba(0,0,0,.72) 100%);
-  backdrop-filter:blur(2px);
-  z-index:-1;
-}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f8e7b0;min-height:100vh;background:#050806}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.9)),url("C6B5C7E6-C0A5-4D30-9AB6-24B33C4FDD14.png") center/cover no-repeat;z-index:-2}
+body:after{content:"";position:fixed;inset:0;background:radial-gradient(circle at center,transparent 15%,rgba(0,0,0,.72) 100%);backdrop-filter:blur(2px);z-index:-1}
 .app{max-width:560px;margin:0 auto;padding:34px 14px 90px}
-h1{
-  text-align:center;
-  font-size:34px;
-  margin:20px 0 6px;
-  color:#ffd36b;
-  text-shadow:0 0 14px rgba(255,195,64,.9),0 4px 10px #000;
-}
+h1{text-align:center;font-size:34px;margin:20px 0 6px;color:#ffd36b;text-shadow:0 0 14px rgba(255,195,64,.9),0 4px 10px #000}
 .sub{text-align:center;color:#f5deb0;margin-bottom:22px;letter-spacing:2px}
-.card{
-  background:linear-gradient(180deg,rgba(5,15,12,.84),rgba(0,0,0,.8));
-  border:1px solid rgba(255,210,100,.58);
-  border-radius:18px;
-  padding:18px;
-  margin:14px 0;
-  box-shadow:0 0 18px rgba(255,180,40,.16),inset 0 0 18px rgba(0,255,160,.06);
-}
-.badge{
-  display:inline-block;
-  padding:5px 10px;
-  border:1px solid rgba(0,255,160,.55);
-  color:#86ffc4;
-  border-radius:999px;
-  font-size:12px;
-  margin-bottom:10px;
-}
-input,select,button{
-  width:100%;
-  font-size:17px;
-  border-radius:12px;
-  padding:15px;
-  margin-bottom:12px;
-}
-input,select{
-  background:rgba(0,0,0,.72);
-  color:#ffe9b5;
-  border:1px solid rgba(255,210,100,.65);
-}
+.card{background:linear-gradient(180deg,rgba(5,15,12,.84),rgba(0,0,0,.8));border:1px solid rgba(255,210,100,.58);border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 0 18px rgba(255,180,40,.16),inset 0 0 18px rgba(0,255,160,.06)}
+.badge{display:inline-block;padding:5px 10px;border:1px solid rgba(0,255,160,.55);color:#86ffc4;border-radius:999px;font-size:12px;margin-bottom:10px}
+input,select,button{width:100%;font-size:17px;border-radius:12px;padding:15px;margin-bottom:12px}
+input,select{background:rgba(0,0,0,.72);color:#ffe9b5;border:1px solid rgba(255,210,100,.65)}
 input::placeholder{color:rgba(255,235,190,.55)}
-button{
-  border:1px solid rgba(255,235,150,.75);
-  font-weight:900;
-  color:#fff3c4;
-  background:linear-gradient(180deg,#c99635,#7c4b10);
-  box-shadow:0 0 16px rgba(255,195,64,.35);
-}
+button{border:1px solid rgba(255,235,150,.75);font-weight:900;color:#fff3c4;background:linear-gradient(180deg,#c99635,#7c4b10);box-shadow:0 0 16px rgba(255,195,64,.35)}
 button:active{transform:scale(.98)}
 button.secondary{background:linear-gradient(180deg,#1e7d55,#0b3d2b);color:#baffd7}
 button.delete{background:linear-gradient(180deg,#9b2f25,#4b0f0d);color:#ffd1c9}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
 .grid button{font-size:13px;padding:11px 6px;margin:0}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.timer{
-  font-size:42px;
-  font-weight:900;
-  text-align:center;
-  margin:10px 0;
-  color:#ffd36b;
-  text-shadow:0 0 14px rgba(255,200,70,.75);
-}
+.timer{font-size:42px;font-weight:900;text-align:center;margin:10px 0;color:#ffd36b;text-shadow:0 0 14px rgba(255,200,70,.75)}
 .name{font-size:22px;font-weight:900;color:#fff0c0}
 .done{color:#84ffb5}
 .small{font-size:13px;color:#e8d6a8;text-align:center;line-height:1.6}
@@ -103,156 +38,175 @@ button.delete{background:linear-gradient(180deg,#9b2f25,#4b0f0d);color:#ffd1c9}
 </head>
 <body>
 <div class="app">
-  <h1>Once Human 繁殖管理</h1>
-  <div class="sub">24時間繁殖タイマー</div>
-  <div class="card">
-    <div class="badge">ANIMAL PRESET</div>
-    <div class="grid">
-      <button onclick="setAnimal('オオカミ')">🐺 オオカミ</button>
-      <button onclick="setAnimal('シカ')">🦌 シカ</button>
-      <button onclick="setAnimal('クマ')">🐻 クマ</button>
-      <button onclick="setAnimal('ワニ')">🐊 ワニ</button>
-      <button onclick="setAnimal('フラミンゴ')">🦩 フラミンゴ</button>
-      <button onclick="setAnimal('バッファロー')">🦬 バッファロー</button>
-    </div>
+<h1>Once Human 繁殖管理</h1>
+<div class="sub">24時間繁殖タイマー</div>
+<div class="card">
+<div class="badge">ANIMAL PRESET</div>
+<div class="grid">
+<button onclick="setAnimal('オオカミ')">🐺 オオカミ</button>
+<button onclick="setAnimal('ヒョウ')">🐆 ヒョウ</button>
+<button onclick="setAnimal('クマ')">🐻 クマ</button>
+<button onclick="setAnimal('ホッキョクグマ')">🐻‍❄️ ホッキョクグマ</button>
+<button onclick="setAnimal('イノシシ')">🐗 イノシシ</button>
+<button onclick="setAnimal('バッファロー')">🦬 バッファロー</button>
+<button onclick="setAnimal('シカ')">🦌 シカ</button>
+<button onclick="setAnimal('ヒツジ')">🐑 ヒツジ</button>
+<button onclick="setAnimal('ウサギ')">🐰 ウサギ</button>
+<button onclick="setAnimal('カピバラ')">🦫 カピバラ</button>
+<button onclick="setAnimal('キツネ')">🦊 キツネ</button>
+<button onclick="setAnimal('スノーフォックス')">❄️🦊 スノーフォックス</button>
+<button onclick="setAnimal('フラミンゴ')">🦩 フラミンゴ</button>
+<button onclick="setAnimal('ワニ')">🐊 ワニ</button>
+<button onclick="setAnimal('ワニガメ')">🐢 ワニガメ</button>
+<button onclick="setAnimal('ウミガメ')">🌊🐢 ウミガメ</button>
+</div>
 <div class="badge">BREEDING TIMER</div>
 <input id="animalName" placeholder="動物名を入力 例：オオカミ">
 <select id="hours">
-  <option value="24">24時間</option>
-  <option value="12">12時間</option>
-  <option value="6">6時間</option>
-  <option value="3">3時間</option>
-  <option value="1">1時間</option>
+<option value="24">24時間</option>
+<option value="12">12時間</option>
+<option value="6">6時間</option>
+<option value="3">3時間</option>
+<option value="1">1時間</option>
 </select>
 <button onclick="addTimer()">タイマー追加</button>
-  </div>
-  <div id="list"></div>
-  <div class="card">
-    <div class="badge">COMPLETE HISTORY</div>
-    <div id="history"></div>
-    <button class="delete" onclick="clearHistory()">履歴を消す</button>
-  </div>
-  <div class="card small">
-    Safariで開いたら、共有ボタン →「ホーム画面に追加」でアプリ風に使えます。
-  </div>
+</div>
+<div id="list"></div>
+<div class="card">
+<div class="badge">COMPLETE HISTORY</div>
+<div id="history"></div>
+<button class="delete" onclick="clearHistory()">履歴を消す</button>
+</div>
+<div class="card small">
+Safariで開いたら、共有ボタン →「ホーム画面に追加」でアプリ風に使えます。
+</div>
 </div>
 <script>
-const TIMER_KEY="oncehuman_timers_v3";
-const HISTORY_KEY="oncehuman_history_v3";
+const TIMER_KEY="oncehuman_timers_v4";
+const HISTORY_KEY="oncehuman_history_v4";
 let timers=JSON.parse(localStorage.getItem(TIMER_KEY)||"[]");
 let history=JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]");
 let notified={};
 function save(){
-  localStorage.setItem(TIMER_KEY,JSON.stringify(timers));
-  localStorage.setItem(HISTORY_KEY,JSON.stringify(history));
+localStorage.setItem(TIMER_KEY,JSON.stringify(timers));
+localStorage.setItem(HISTORY_KEY,JSON.stringify(history));
 }
 function setAnimal(name){
-  document.getElementById("animalName").value=name;
+document.getElementById("animalName").value=name;
 }
 function addTimer(){
-  const name=document.getElementById("animalName").value.trim();
-  const h=Number(document.getElementById("hours").value);
-  if(!name){alert("動物名を入力してください");return;}
-  timers.push({id:Date.now(),name,end:Date.now()+h*60*60*1000,hours:h,completed:false});
-  document.getElementById("animalName").value="";
-  save();render();
+const name=document.getElementById("animalName").value.trim();
+const h=Number(document.getElementById("hours").value);
+if(!name){alert("動物名を入力してください");return;}
+timers.push({id:Date.now(),name,end:Date.now()+h*60*60*1000,hours:h,completed:false});
+document.getElementById("animalName").value="";
+save();render();
 }
 function delTimer(id){
-  timers=timers.filter(t=>t.id!==id);
-  save();render();
+timers=timers.filter(t=>t.id!==id);
+save();render();
 }
 function resetTimer(id){
-  timers=timers.map(t=>t.id===id?{...t,end:Date.now()+t.hours*60*60*1000,completed:false}:t);
-  notified[id]=false;
-  save();render();
+timers=timers.map(t=>t.id===id?{...t,end:Date.now()+t.hours*60*60*1000,completed:false}:t);
+notified[id]=false;
+save();render();
 }
 function clearHistory(){
-  history=[];
-  save();render();
+history=[];
+save();render();
 }
 function fmt(ms){
-  if(ms<=0)return"完了！";
-  const s=Math.floor(ms/1000);
-  const h=Math.floor(s/3600);
-  const m=Math.floor((s%3600)/60);
-  const sec=s%60;
-  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+if(ms<=0)return"完了！";
+const s=Math.floor(ms/1000);
+const h=Math.floor(s/3600);
+const m=Math.floor((s%3600)/60);
+const sec=s%60;
+return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
 }
 function nowText(){
-  const d=new Date();
-  return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+const d=new Date();
+return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
 }
 function beep(){
-  try{
-    const ctx=new AudioContext();
-    const o=ctx.createOscillator();
-    const g=ctx.createGain();
-    o.connect(g);g.connect(ctx.destination);
-    o.frequency.value=880;
-    g.gain.value=.09;
-    o.start();
-    setTimeout(()=>{o.stop();ctx.close()},650);
-    if(navigator.vibrate)navigator.vibrate([300,120,300]);
-  }catch(e){}
+try{
+const ctx=new AudioContext();
+const o=ctx.createOscillator();
+const g=ctx.createGain();
+o.connect(g);g.connect(ctx.destination);
+o.frequency.value=880;
+g.gain.value=.09;
+o.start();
+setTimeout(()=>{o.stop();ctx.close()},650);
+if(navigator.vibrate)navigator.vibrate([300,120,300]);
+}catch(e){}
 }
 function icon(name){
-  if(name.includes("オオカミ"))return"🐺";
-  if(name.includes("シカ"))return"🦌";
-  if(name.includes("クマ"))return"🐻";
-  if(name.includes("ワニ"))return"🐊";
-  if(name.includes("フラミンゴ"))return"🦩";
-  if(name.includes("バッファロー"))return"🦬";
-  return"🐾";
+if(name.includes("オオカミ"))return"🐺";
+if(name.includes("ヒョウ"))return"🐆";
+if(name.includes("ホッキョクグマ"))return"🐻‍❄️";
+if(name.includes("クマ"))return"🐻";
+if(name.includes("イノシシ"))return"🐗";
+if(name.includes("バッファロー"))return"🦬";
+if(name.includes("シカ"))return"🦌";
+if(name.includes("ヒツジ"))return"🐑";
+if(name.includes("ウサギ"))return"🐰";
+if(name.includes("カピバラ"))return"🦫";
+if(name.includes("スノーフォックス"))return"❄️🦊";
+if(name.includes("キツネ"))return"🦊";
+if(name.includes("フラミンゴ"))return"🦩";
+if(name.includes("ワニガメ"))return"🐢";
+if(name.includes("ウミガメ"))return"🌊🐢";
+if(name.includes("ワニ"))return"🐊";
+return"🐾";
 }
 function render(){
-  const list=document.getElementById("list");
-  const hist=document.getElementById("history");
-  list.innerHTML="";
-  hist.innerHTML="";
-  timers.forEach(t=>{
-    const left=t.end-Date.now();
-    if(left<=0&&!t.completed){
-      t.completed=true;
-      history.unshift({name:t.name,time:nowText()});
-      if(history.length>10)history=history.slice(0,10);
-      if(!notified[t.id]){notified[t.id]=true;beep();}
-      save();
-    }
-  });
-  if(timers.length===0){
-    list.innerHTML='<div class="card small">まだタイマーがありません。</div>';
-  }
-  timers.forEach(t=>{
-    const left=t.end-Date.now();
-    const total=t.hours*60*60*1000;
-    const pct=Math.max(0,Math.min(100,(left/total)*100));
-    const div=document.createElement("div");
-    div.className="card";
-    div.innerHTML=`
-      <div class="badge">${left<=0?'COMPLETE':'ACTIVE'}</div>
-      <div class="name">${icon(t.name)} ${t.name}</div>
-      <div class="timer ${left<=0?'done':''}">${fmt(left)}</div>
-      <div class="barWrap"><div class="bar" style="width:${pct}%"></div></div>
-      <div class="percent">残り ${Math.round(pct)}%</div>
-      <div class="row">
-        <button class="secondary" onclick="resetTimer(${t.id})">再スタート</button>
-        <button class="delete" onclick="delTimer(${t.id})">削除</button>
-      </div>`;
-    list.appendChild(div);
-  });
-  if(history.length===0){
-    hist.innerHTML='<div class="small">完了履歴はまだありません。</div>';
-  }else{
-    history.forEach(h=>{
-      const item=document.createElement("div");
-      item.className="historyItem";
-      item.textContent=`${icon(h.name)} ${h.name}　${h.time} 完了`;
-      hist.appendChild(item);
-    });
-  }
+const list=document.getElementById("list");
+const hist=document.getElementById("history");
+list.innerHTML="";
+hist.innerHTML="";
+timers.forEach(t=>{
+const left=t.end-Date.now();
+if(left<=0&&!t.completed){
+t.completed=true;
+history.unshift({name:t.name,time:nowText()});
+if(history.length>10)history=history.slice(0,10);
+if(!notified[t.id]){notified[t.id]=true;beep();}
+save();
+}
+});
+if(timers.length===0){
+list.innerHTML='<div class="card small">まだタイマーがありません。</div>';
+}
+timers.forEach(t=>{
+const left=t.end-Date.now();
+const total=t.hours*60*60*1000;
+const pct=Math.max(0,Math.min(100,(left/total)*100));
+const div=document.createElement("div");
+div.className="card";
+div.innerHTML=`
+<div class="badge">${left<=0?'COMPLETE':'ACTIVE'}</div>
+<div class="name">${icon(t.name)} ${t.name}</div>
+<div class="timer ${left<=0?'done':''}">${fmt(left)}</div>
+<div class="barWrap"><div class="bar" style="width:${pct}%"></div></div>
+<div class="percent">残り ${Math.round(pct)}%</div>
+<div class="row">
+<button class="secondary" onclick="resetTimer(${t.id})">再スタート</button>
+<button class="delete" onclick="delTimer(${t.id})">削除</button>
+</div>`;
+list.appendChild(div);
+});
+if(history.length===0){
+hist.innerHTML='<div class="small">完了履歴はまだありません。</div>';
+}else{
+history.forEach(h=>{
+const item=document.createElement("div");
+item.className="historyItem";
+item.textContent=`${icon(h.name)} ${h.name}　${h.time} 完了`;
+hist.appendChild(item);
+});
+}
 }
 setInterval(render,1000);
 render();
 </script>
 </body>
-</html>
