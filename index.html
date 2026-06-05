@@ -6,53 +6,143 @@
 <title>Once Human 繁殖管理</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;min-height:100vh;background:#111;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.7)),url("C6B5C7E6-C0A5-4D30-9AB6-24B33C4FDD14.png") center/cover no-repeat;z-index:-2}
-body:after{content:"";position:fixed;inset:0;backdrop-filter:blur(1px);z-index:-1}
-.app{max-width:520px;margin:0 auto;padding:24px 14px 80px}
-h1{text-align:center;font-size:28px;margin:18px 0 8px;text-shadow:0 3px 10px #000}
-.sub{text-align:center;color:#ddd;margin-bottom:18px}
-.card{background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.2);border-radius:18px;padding:16px;margin:14px 0;box-shadow:0 8px 30px rgba(0,0,0,.35)}
-input,button,select{font-size:16px;border-radius:12px;border:0;padding:13px}
-input,select{width:100%;background:rgba(255,255,255,.95);color:#111;margin-bottom:10px}
-button{font-weight:700;color:#fff;background:#d94b2b;width:100%;margin-top:6px}
-button.secondary{background:#333}
-button.delete{background:#777}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.timer{font-size:34px;font-weight:900;text-align:center;letter-spacing:1px;margin:12px 0}
-.name{font-size:20px;font-weight:800}
-.done{color:#ffd54a}
-.small{font-size:13px;color:#ccc;text-align:center;line-height:1.5}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#f8e7b0;
+  min-height:100vh;
+  background:#050806;
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.86)),
+    url("C6B5C7E6-C0A5-4D30-9AB6-24B33C4FDD14.png") center/cover no-repeat;
+  z-index:-2;
+}
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at center,transparent 20%,rgba(0,0,0,.65) 100%);
+  backdrop-filter:blur(2px);
+  z-index:-1;
+}
+.app{max-width:540px;margin:0 auto;padding:34px 14px 90px}
+h1{
+  text-align:center;
+  font-size:34px;
+  margin:20px 0 6px;
+  color:#ffd36b;
+  text-shadow:0 0 12px rgba(255,195,64,.8),0 4px 10px #000;
+  letter-spacing:1px;
+}
+.sub{
+  text-align:center;
+  color:#f5deb0;
+  margin-bottom:26px;
+  letter-spacing:2px;
+}
+.card{
+  background:linear-gradient(180deg,rgba(5,15,12,.82),rgba(0,0,0,.78));
+  border:1px solid rgba(255,210,100,.55);
+  border-radius:18px;
+  padding:18px;
+  margin:14px 0;
+  box-shadow:0 0 18px rgba(255,180,40,.16),inset 0 0 18px rgba(0,255,160,.06);
+}
+input,select,button{
+  width:100%;
+  font-size:17px;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:12px;
+}
+input,select{
+  background:rgba(0,0,0,.72);
+  color:#ffe9b5;
+  border:1px solid rgba(255,210,100,.65);
+}
+input::placeholder{color:rgba(255,235,190,.55)}
+button{
+  border:1px solid rgba(255,235,150,.75);
+  font-weight:900;
+  color:#fff3c4;
+  background:linear-gradient(180deg,#c99635,#7c4b10);
+  box-shadow:0 0 16px rgba(255,195,64,.35);
+}
+button:active{transform:scale(.98)}
+button.secondary{
+  background:linear-gradient(180deg,#1e7d55,#0b3d2b);
+  color:#baffd7;
+}
+button.delete{
+  background:linear-gradient(180deg,#9b2f25,#4b0f0d);
+  color:#ffd1c9;
+}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.timer{
+  font-size:42px;
+  font-weight:900;
+  text-align:center;
+  margin:12px 0;
+  color:#ffd36b;
+  text-shadow:0 0 14px rgba(255,200,70,.75);
+}
+.name{
+  font-size:22px;
+  font-weight:900;
+  color:#fff0c0;
+}
+.done{color:#84ffb5}
+.small{
+  font-size:13px;
+  color:#e8d6a8;
+  text-align:center;
+  line-height:1.6;
+}
+.badge{
+  display:inline-block;
+  padding:5px 10px;
+  border:1px solid rgba(0,255,160,.5);
+  color:#86ffc4;
+  border-radius:999px;
+  font-size:12px;
+  margin-bottom:8px;
+}
 </style>
 </head>
 <body>
 <div class="app">
-<h1>Once Human 繁殖管理</h1>
-<div class="sub">24時間繁殖タイマー</div>
+  <h1>Once Human 繁殖管理</h1>
+  <div class="sub">24時間繁殖タイマー</div>
 
-<div class="card">
-<input id="animalName" placeholder="動物名を入力 例：オオカミ">
-<select id="hours">
-<option value="24">24時間</option>
-<option value="12">12時間</option>
-<option value="6">6時間</option>
-<option value="3">3時間</option>
-<option value="1">1時間</option>
-</select>
-<button onclick="addTimer()">タイマー追加</button>
-</div>
+  <div class="card">
+    <div class="badge">BREEDING TIMER</div>
+    <input id="animalName" placeholder="動物名を入力 例：オオカミ">
+    <select id="hours">
+      <option value="24">24時間</option>
+      <option value="12">12時間</option>
+      <option value="6">6時間</option>
+      <option value="3">3時間</option>
+      <option value="1">1時間</option>
+    </select>
+    <button onclick="addTimer()">タイマー追加</button>
+  </div>
 
-<div id="list"></div>
+  <div id="list"></div>
 
-<div class="card small">
-Safariで開いたら、共有ボタン →「ホーム画面に追加」でアプリ風に使えます。<br>
-背景画像を使う場合は、GitHubに <b>background.png</b> という名前で画像を追加してください。
-</div>
+  <div class="card small">
+    Safariで開いたら、共有ボタン →「ホーム画面に追加」でアプリ風に使えます。
+  </div>
 </div>
 
 <script>
-const KEY="oncehuman_breeding_timers_v1";
+const KEY="oncehuman_breeding_timers_v2";
 let timers=JSON.parse(localStorage.getItem(KEY)||"[]");
+let notified={};
 
 function save(){localStorage.setItem(KEY,JSON.stringify(timers));}
 
@@ -72,6 +162,7 @@ function delTimer(id){
 
 function resetTimer(id){
   timers=timers.map(t=>t.id===id?{...t,end:Date.now()+t.hours*60*60*1000}:t);
+  notified[id]=false;
   save();render();
 }
 
@@ -90,12 +181,13 @@ function beep(){
     const o=ctx.createOscillator();
     const g=ctx.createGain();
     o.connect(g);g.connect(ctx.destination);
-    o.frequency.value=880;g.gain.value=.08;
-    o.start();setTimeout(()=>{o.stop();ctx.close()},500);
+    o.frequency.value=880;
+    g.gain.value=.09;
+    o.start();
+    setTimeout(()=>{o.stop();ctx.close()},650);
+    if(navigator.vibrate) navigator.vibrate([300,120,300]);
   }catch(e){}
 }
-
-let notified={};
 
 function render(){
   const list=document.getElementById("list");
@@ -110,7 +202,8 @@ function render(){
     const div=document.createElement("div");
     div.className="card";
     div.innerHTML=`
-      <div class="name">${t.name}</div>
+      <div class="badge">ACTIVE</div>
+      <div class="name">🐺 ${t.name}</div>
       <div class="timer ${left<=0?'done':''}">${fmt(left)}</div>
       <div class="row">
         <button class="secondary" onclick="resetTimer(${t.id})">再スタート</button>
