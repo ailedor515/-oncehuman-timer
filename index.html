@@ -24,6 +24,9 @@ button.delete{background:linear-gradient(180deg,#9b2f25,#4b0f0d);color:#ffd1c9}
 .tabs button{font-size:14px;padding:10px;margin:0}
 .tabs button.active{background:linear-gradient(180deg,#1e7d55,#0b3d2b);color:#baffd7}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.preview{text-align:center;margin:10px 0 14px}
+.preview img{width:120px;height:120px;object-fit:cover;border-radius:22px;border:2px solid #ffd36b;box-shadow:0 0 18px rgba(255,210,100,.55)}
+.preview div{font-weight:900;color:#ffd36b;margin-top:6px}
 .timer{font-size:36px;font-weight:900;text-align:center;margin:8px 0;color:#ffd36b}
 .name{font-size:19px;font-weight:900;color:#fff0c0;display:flex;align-items:center;gap:10px}
 .name img{width:46px;height:46px;border-radius:12px;object-fit:cover}
@@ -48,47 +51,30 @@ button.delete{background:linear-gradient(180deg,#9b2f25,#4b0f0d);color:#ffd1c9}
 </div>
 <div class="card">
 <div class="badge">TAMER NAME</div>
-<input id="tamerName" placeholder="テイマー名を入力" oninput="updateTamerName(this.value)">
+<input id="tamerName" placeholder="テイマー名を入力">
 </div>
 <div class="card">
 <div class="badge">BREEDING TIMER</div>
-<select id="animalType" onchange="updateAnimalPreview()"></select>
-
-<div style="text-align:center;margin:10px 0 14px;">
-  <img id="animalPreview"
-       src="IMG_5849.png"
-       style="width:120px;height:120px;object-fit:cover;border-radius:22px;border:2px solid #ffd36b;box-shadow:0 0 18px rgba(255,210,100,.55);">
-  <div id="animalPreviewName" style="font-weight:900;color:#ffd36b;margin-top:6px;">オオカミ</div>
+<select id="animalType"></select>
+<div class="preview">
+<img id="animalPreview" src="IMG_5849.png" alt="動物画像">
+<div id="animalPreviewName">オオカミ</div>
 </div>
 <input id="animalName" placeholder="動物の名前を入力 例：白牙">
 <div class="row">
-
 <select id="sex">
-
 <option value="">性別</option>
-
 <option>オス</option>
-
 <option>メス</option>
-
 </select>
-
 <select id="rank">
-
 <option value="">ランク</option>
-
 <option>Sランク</option>
-
 <option>Aランク</option>
-
 <option>Bランク</option>
-
 <option>Cランク</option>
-
 </select>
-
 </div>
-
 <textarea id="trait" placeholder="特性を自由に入力"></textarea>
 <select id="hours">
 <option value="24">24時間</option>
@@ -97,259 +83,301 @@ button.delete{background:linear-gradient(180deg,#9b2f25,#4b0f0d);color:#ffd1c9}
 <option value="3">3時間</option>
 <option value="1">1時間</option>
 </select>
-<textarea id="memo" placeholder="メモ 例：高ランク、親候補、変異あり"></textarea>
-<button onclick="addTimer()">このテイマーに追加</button>
+<textarea id="memo" placeholder="メモ 例：親候補、変異あり、保管場所など"></textarea>
+<button id="addBtn">このテイマーに追加</button>
 <div class="small">各テイマー最大5匹まで登録できます。</div>
 </div>
 <div id="timerList"></div>
 <div class="card">
 <div class="badge">COMPLETE HISTORY</div>
 <div id="historyBox"></div>
-<button class="delete" onclick="clearHistory()">履歴を消す</button>
+<button class="delete" id="clearHistoryBtn">履歴を消す</button>
 </div>
 <div class="card">
 <div class="badge">STATS</div>
 <div id="statsBox" class="stats"></div>
-<button class="delete" onclick="clearStats()">繁殖回数をリセット</button>
+<button class="delete" id="clearStatsBtn">繁殖回数をリセット</button>
 </div>
 </div>
 <script>
-const animals=[
-["オオカミ","IMG_5849.png"],
-["ヒョウ","IMG_5850.png"],
-["クマ","IMG_5851.png"],
-["ホッキョクグマ","IMG_5852.png"],
-["イノシシ","IMG_5853.png"],
-["バッファロー","IMG_5854.png"],
-["シカ","IMG_5855.png"],
-["ヒツジ","IMG_5856.png"],
-["ウサギ","IMG_5857.png"],
-["カピバラ","IMG_5858.png"],
-["キツネ","IMG_5859.png"],
-["スノーフォックス","IMG_5860.png"],
-["フラミンゴ","IMG_5861.png"],
-["ワニ","IMG_5862.png"],
-["ワニガメ","IMG_5863.png"],
-["ウミガメ","IMG_5864.png"]
+const animals = [
+  ["オオカミ","IMG_5849.png"],
+  ["ヒョウ","IMG_5850.png"],
+  ["クマ","IMG_5851.png"],
+  ["ホッキョクグマ","IMG_5852.png"],
+  ["イノシシ","IMG_5853.png"],
+  ["バッファロー","IMG_5854.png"],
+  ["シカ","IMG_5855.png"],
+  ["ヒツジ","IMG_5856.png"],
+  ["ウサギ","IMG_5857.png"],
+  ["カピバラ","IMG_5858.png"],
+  ["キツネ","IMG_5859.png"],
+  ["スノーフォックス","IMG_5860.png"],
+  ["フラミンゴ","IMG_5861.png"],
+  ["ワニ","IMG_5862.png"],
+  ["ワニガメ","IMG_5863.png"],
+  ["ウミガメ","IMG_5864.png"]
 ];
-const KEY="oncehuman_v7_fixed_2";
-let data=JSON.parse(localStorage.getItem(KEY)||"null")||{
-active:0,
-tamers:[
-{name:"テイマー1",timers:[]},
-{name:"テイマー2",timers:[]},
-{name:"テイマー3",timers:[]}
-],
-doneHistory:[],
-stats:{}
+const KEY = "oncehuman_v7_final_clean";
+let data = JSON.parse(localStorage.getItem(KEY) || "null") || {
+  active: 0,
+  tamers: [
+    { name: "テイマー1", timers: [] },
+    { name: "テイマー2", timers: [] },
+    { name: "テイマー3", timers: [] }
+  ],
+  doneHistory: [],
+  stats: {}
 };
-let notified={};
+let notified = {};
 function save(){
-localStorage.setItem(KEY,JSON.stringify(data));
+  localStorage.setItem(KEY, JSON.stringify(data));
 }
 function activeTamer(){
-return data.tamers[data.active];
+  return data.tamers[data.active];
 }
-function imgOf(type){
-let found=animals.find(a=>a[0]===type);
-return found?found[1]:"IMG_5849.png";
+function imageOf(type){
+  const found = animals.find(a => a[0] === type);
+  return found ? found[1] : "IMG_5849.png";
 }
-function imgTag(type){
-return '<img src="'+imgOf(type)+'" alt="'+type+'">';
+function imageTag(type){
+  return '<img src="' + imageOf(type) + '" alt="' + type + '">';
 }
-function setup(){
-animalType.innerHTML=animals.map(a=>'<option value="'+a[0]+'">'+a[0]+'</option>').join("");
-updateAnimalPreview();
-render();
+function setupAnimalSelect(){
+  const select = document.getElementById("animalType");
+  select.innerHTML = animals.map(a => '<option value="' + a[0] + '">' + a[0] + '</option>').join("");
+  select.addEventListener("change", updateAnimalPreview);
+  updateAnimalPreview();
 }
 function updateAnimalPreview(){
-let type=animalType.value;
-let found=animals.find(a=>a[0]===type);
-if(found){
-animalPreview.src=found[1];
-animalPreviewName.textContent=found[0];
+  const type = document.getElementById("animalType").value || animals[0][0];
+  document.getElementById("animalPreview").src = imageOf(type);
+  document.getElementById("animalPreviewName").textContent = type;
 }
-}  
 function renderTabs(){
-tabs.innerHTML=data.tamers.map((t,i)=>{
-let name=t.name||("テイマー"+(i+1));
-return '<button class="'+(i===data.active?'active':'')+'" onclick="switchTamer('+i+')">'+name+'<br>'+t.timers.length+'/5</button>';
-}).join("");
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = data.tamers.map((t, i) => {
+    const name = t.name || ("テイマー" + (i + 1));
+    const activeClass = i === data.active ? "active" : "";
+    return '<button class="' + activeClass + '" data-index="' + i + '">' + name + '<br>' + t.timers.length + '/5</button>';
+  }).join("");
+  tabs.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", function(){
+      data.active = Number(this.dataset.index);
+      save();
+      render();
+    });
+  });
 }
-function switchTamer(i){
-data.active=i;
-save();
-render();
-}
-function updateTamerName(value){
-activeTamer().name=value.trim()||("テイマー"+(data.active+1));
-save();
-renderTabs();
+function setupTamerNameInput(){
+  const input = document.getElementById("tamerName");
+  input.addEventListener("input", function(){
+    activeTamer().name = this.value.trim() || ("テイマー" + (data.active + 1));
+    save();
+    renderTabs();
+  });
 }
 function addTimer(){
-let t=activeTamer();
-if(t.timers.length>=5){
-alert("このテイマーは5匹までです");
-return;
+  const tamer = activeTamer();
+  if(tamer.timers.length >= 5){
+    alert("このテイマーは5匹までです");
+    return;
+  }
+  const type = document.getElementById("animalType").value;
+  const animalName = document.getElementById("animalName").value.trim() || type;
+  const sex = document.getElementById("sex").value || "未設定";
+  const rank = document.getElementById("rank").value || "ランク未設定";
+  const trait = document.getElementById("trait").value.trim();
+  const memo = document.getElementById("memo").value.trim();
+  const hours = Number(document.getElementById("hours").value);
+  tamer.timers.push({
+    id: Date.now(),
+    type,
+    name: animalName,
+    sex,
+    rank,
+    trait,
+    memo,
+    end: Date.now() + hours * 3600000,
+    hours,
+    completed: false
+  });
+  document.getElementById("animalName").value = "";
+  document.getElementById("trait").value = "";
+  document.getElementById("memo").value = "";
+  save();
+  render();
 }
-let type=animalType.value;
-let name=animalName.value.trim()||type;
-let h=Number(hours.value);
-t.timers.push({
-id:Date.now(),
-type:type,
-name:name,
-sex:sex.value,
-rank:rank.value || "ランク未設定",
-trait:trait.value,
-trait.value="";
-memo.value="";
-end:Date.now()+h*3600000,
-hours:h,
-completed:false
-});
-animalName.value="";
-memo.value="";
-save();
-render();
-}
-function delTimer(id){
-activeTamer().timers=activeTamer().timers.filter(t=>t.id!==id);
-save();
-render();
+function deleteTimer(id){
+  activeTamer().timers = activeTamer().timers.filter(t => t.id !== id);
+  save();
+  render();
 }
 function resetTimer(id){
-activeTamer().timers=activeTamer().timers.map(t=>{
-if(t.id===id){
-return {...t,end:Date.now()+t.hours*3600000,completed:false};
-}
-return t;
-});
-notified[id]=false;
-save();
-render();
+  activeTamer().timers = activeTamer().timers.map(t => {
+    if(t.id === id){
+      return {
+        ...t,
+        end: Date.now() + t.hours * 3600000,
+        completed: false
+      };
+    }
+    return t;
+  });
+  notified[id] = false;
+  save();
+  render();
 }
 function clearHistory(){
-data.doneHistory=[];
-save();
-render();
+  data.doneHistory = [];
+  save();
+  render();
 }
 function clearStats(){
-data.stats={};
-save();
-render();
+  data.stats = {};
+  save();
+  render();
 }
-function fmt(ms){
-if(ms<=0)return"完了！";
-let s=Math.floor(ms/1000);
-let h=Math.floor(s/3600);
-let m=Math.floor((s%3600)/60);
-let sec=s%60;
-return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0");
+function formatTime(ms){
+  if(ms <= 0) return "完了！";
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  return String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0") + ":" + String(sec).padStart(2,"0");
 }
 function nowText(){
-let d=new Date();
-return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  const d = new Date();
+  return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
 }
 function beep(){
-try{
-let c=new AudioContext();
-let o=c.createOscillator();
-let g=c.createGain();
-o.connect(g);
-g.connect(c.destination);
-o.frequency.value=880;
-g.gain.value=.09;
-o.start();
-setTimeout(()=>{o.stop();c.close()},700);
-if(navigator.vibrate)navigator.vibrate([300,120,300]);
-}catch(e){}
+  try{
+    const c = new AudioContext();
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.connect(g);
+    g.connect(c.destination);
+    o.frequency.value = 880;
+    g.gain.value = .09;
+    o.start();
+    setTimeout(() => { o.stop(); c.close(); }, 700);
+    if(navigator.vibrate) navigator.vibrate([300,120,300]);
+  }catch(e){}
 }
 function checkComplete(){
-data.tamers.forEach(tm=>{
-tm.timers.forEach(x=>{
-let left=x.end-Date.now();
-if(left<=0&&!x.completed){
-x.completed=true;
-data.doneHistory.unshift({
-tamer:tm.name,
-type:x.type,
-name:x.name,
-sex:x.sex,
-rank:x.rank,
-trait:x.trait,
-time:nowText()
-});
-data.stats[x.type]=(data.stats[x.type]||0)+1;
-if(data.doneHistory.length>30)data.doneHistory=data.doneHistory.slice(0,30);
-if(!notified[x.id]){
-notified[x.id]=true;
-beep();
-}
-save();
-}
-});
-});
+  data.tamers.forEach(tamer => {
+    tamer.timers.forEach(timer => {
+      const left = timer.end - Date.now();
+      if(left <= 0 && !timer.completed){
+        timer.completed = true;
+        data.doneHistory.unshift({
+          tamer: tamer.name,
+          type: timer.type,
+          name: timer.name,
+          sex: timer.sex,
+          rank: timer.rank,
+          trait: timer.trait,
+          time: nowText()
+        });
+        data.stats[timer.type] = (data.stats[timer.type] || 0) + 1;
+        if(data.doneHistory.length > 30){
+          data.doneHistory = data.doneHistory.slice(0,30);
+        }
+        if(!notified[timer.id]){
+          notified[timer.id] = true;
+          beep();
+        }
+        save();
+      }
+    });
+  });
 }
 function renderTimers(){
-let t=activeTamer();
-timerList.innerHTML="";
-if(t.timers.length===0){
-timerList.innerHTML='<div class="card small">このテイマーのタイマーはまだありません。</div>';
-return;
-}
-t.timers.forEach(x=>{
-let left=x.end-Date.now();
-let total=x.hours*3600000;
-let pct=Math.max(0,Math.min(100,(left/total)*100));
-let d=document.createElement("div");
-d.className="card";
-d.innerHTML=
-'<div class="badge">'+(left<=0?'COMPLETE':'ACTIVE')+'</div>'+
-'<div class="name">'+imgTag(x.type)+' '+x.name+'</div>'+
-'<div class="timer '+(left<=0?'done':'')+'">'+fmt(left)+'</div>'+
-'<div class="barWrap"><div class="bar" style="width:'+pct+'%"></div></div>'+
-'<div class="percent">残り '+Math.round(pct)+'%</div>'+
-'<div class="meta">種類：種類：'+x.type+' ／ 性別：'+(x.sex||'未設定')+' ／ ランク：'+(x.rank||'未設定')+'</div>'+
-+(x.trait?'<div class="meta">特性：'+x.trait+'</div>':'')+
-(x.memo?'<div class="meta">メモ：'+x.memo+'</div>':'')+
-'<div class="row">'+
-'<button class="secondary" onclick="resetTimer('+x.id+')">再スタート</button>'+
-'<button class="delete" onclick="delTimer('+x.id+')">削除</button>'+
-'</div>';
-timerList.appendChild(d);
-});
+  const list = document.getElementById("timerList");
+  const tamer = activeTamer();
+  list.innerHTML = "";
+  if(tamer.timers.length === 0){
+    list.innerHTML = '<div class="card small">このテイマーのタイマーはまだありません。</div>';
+    return;
+  }
+  tamer.timers.forEach(timer => {
+    const left = timer.end - Date.now();
+    const total = timer.hours * 3600000;
+    const pct = Math.max(0, Math.min(100, (left / total) * 100));
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML =
+      '<div class="badge">' + (left <= 0 ? "COMPLETE" : "ACTIVE") + '</div>' +
+      '<div class="name">' + imageTag(timer.type) + ' ' + timer.name + '</div>' +
+      '<div class="timer ' + (left <= 0 ? "done" : "") + '">' + formatTime(left) + '</div>' +
+      '<div class="barWrap"><div class="bar" style="width:' + pct + '%"></div></div>' +
+      '<div class="percent">残り ' + Math.round(pct) + '%</div>' +
+      '<div class="meta">種類：' + timer.type + ' ／ 性別：' + timer.sex + ' ／ ランク：' + timer.rank + '</div>' +
+      (timer.trait ? '<div class="meta">特性：' + timer.trait + '</div>' : '') +
+      (timer.memo ? '<div class="meta">メモ：' + timer.memo + '</div>' : '') +
+      '<div class="row">' +
+      '<button class="secondary" data-action="reset" data-id="' + timer.id + '">再スタート</button>' +
+      '<button class="delete" data-action="delete" data-id="' + timer.id + '">削除</button>' +
+      '</div>';
+    list.appendChild(card);
+  });
+  list.querySelectorAll("button").forEach(btn => {
+    const id = Number(btn.dataset.id);
+    if(btn.dataset.action === "reset"){
+      btn.addEventListener("click", () => resetTimer(id));
+    }
+    if(btn.dataset.action === "delete"){
+      btn.addEventListener("click", () => deleteTimer(id));
+    }
+  });
 }
 function renderHistory(){
-if(data.doneHistory.length===0){
-historyBox.innerHTML='<div class="small">完了履歴はまだありません。</div>';
-return;
-}
-historyBox.innerHTML=data.doneHistory.map(h=>{
-return '<div class="historyItem">'+imgTag(h.type)+' '+h.tamer+'：'+h.name+'（'+h.type+'） '+h.sex+' '+(h.rank||'ランク未設定')+' '+h.time+' 完了 完了</div>';
-}).join("");
+  const box = document.getElementById("historyBox");
+  if(data.doneHistory.length === 0){
+    box.innerHTML = '<div class="small">完了履歴はまだありません。</div>';
+    return;
+  }
+  box.innerHTML = data.doneHistory.map(h => {
+    return '<div class="historyItem">' +
+      imageTag(h.type) + ' ' +
+      h.tamer + '：' + h.name + '（' + h.type + '） ' +
+      h.sex + ' ' + h.rank + ' ' + h.time + ' 完了' +
+      (h.trait ? '<br>特性：' + h.trait : '') +
+      '</div>';
+  }).join("");
 }
 function renderStats(){
-let keys=Object.keys(data.stats);
-if(keys.length===0){
-statsBox.innerHTML='<div class="small">繁殖回数はまだありません。</div>';
-return;
-}
-statsBox.innerHTML=keys.map(k=>{
-return '<div class="stat">'+imgTag(k)+'<br>'+k+'<br><b>'+data.stats[k]+'回</b></div>';
-}).join("");
+  const box = document.getElementById("statsBox");
+  const keys = Object.keys(data.stats);
+  if(keys.length === 0){
+    box.innerHTML = '<div class="small">繁殖回数はまだありません。</div>';
+    return;
+  }
+  box.innerHTML = keys.map(k => {
+    return '<div class="stat">' +
+      imageTag(k) +
+      '<br>' + k +
+      '<br><b>' + data.stats[k] + '回</b>' +
+      '</div>';
+  }).join("");
 }
 function render(){
-renderTabs();
-if(document.activeElement!==tamerName){
-tamerName.value=activeTamer().name;
+  renderTabs();
+  const tamerInput = document.getElementById("tamerName");
+  if(document.activeElement !== tamerInput){
+    tamerInput.value = activeTamer().name;
+  }
+  checkComplete();
+  renderTimers();
+  renderHistory();
+  renderStats();
 }
-checkComplete();
-renderTimers();
-renderHistory();
-renderStats();
-}
-setup();
+document.getElementById("addBtn").addEventListener("click", addTimer);
+document.getElementById("clearHistoryBtn").addEventListener("click", clearHistory);
+document.getElementById("clearStatsBtn").addEventListener("click", clearStats);
+setupAnimalSelect();
+setupTamerNameInput();
+render();
 setInterval(render,1000);
 </script>
 </body>
