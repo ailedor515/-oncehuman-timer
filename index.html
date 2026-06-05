@@ -310,7 +310,8 @@ d.innerHTML=
 '<div class="timer '+(left<=0?'done':'')+'">'+fmt(left)+'</div>'+
 '<div class="barWrap"><div class="bar" style="width:'+pct+'%"></div></div>'+
 '<div class="percent">残り '+Math.round(pct)+'%</div>'+
-'<div class="meta">種類：'+x.type+' ／ 性別：'+x.sex+' ／ 世代：'+x.gen+'</div>'+
+'<div class="meta">種類：種類：'+x.type+' ／ 性別：'+(x.sex||'未設定')+' ／ ランク：'+(x.rank||'未設定')+'</div>'+
++(x.trait?'<div class="meta">特性：'+x.trait+'</div>':'')+
 (x.memo?'<div class="meta">メモ：'+x.memo+'</div>':'')+
 '<div class="row">'+
 '<button class="secondary" onclick="resetTimer('+x.id+')">再スタート</button>'+
@@ -325,7 +326,7 @@ historyBox.innerHTML='<div class="small">完了履歴はまだありません。
 return;
 }
 historyBox.innerHTML=data.doneHistory.map(h=>{
-return '<div class="historyItem">'+imgTag(h.type)+' '+h.tamer+'：'+h.name+'（'+h.type+'） '+h.sex+' '+h.gen+' '+h.time+' 完了</div>';
+return '<div class="historyItem">'+imgTag(h.type)+' '+h.tamer+'：'+h.name+'（'+h.type+'） '+h.sex+' '+(h.rank||'ランク未設定')+' '+h.time+' 完了 完了</div>';
 }).join("");
 }
 function renderStats(){
