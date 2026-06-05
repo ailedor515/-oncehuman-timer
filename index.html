@@ -39,10 +39,71 @@ button{border:1px solid rgba(255,235,150,.75);font-weight:900;color:#fff3c4;back
 .stat img,.dexItem img{width:44px;height:44px;border-radius:12px;object-fit:cover}
 .dexItem.locked{opacity:.45}
 .toast{position:fixed;top:18px;left:14px;right:14px;background:#0b3d2b;border:1px solid #ffd36b;padding:14px;border-radius:16px;text-align:center;display:none;z-index:10}
+
+.rareGlow{
+  color:#ffd36b;
+  font-weight:900;
+  border:1px solid #ffd36b;
+  background:rgba(255,210,80,.12);
+  box-shadow:0 0 14px rgba(255,210,80,.5);
+  border-radius:12px;
+  padding:8px;
+  margin-top:7px;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.modalBox{
+  width:320px;
+  background:#071b14;
+  border:2px solid #ffd36b;
+  border-radius:24px;
+  padding:20px;
+  text-align:center;
+}
+
+.modalBox img{
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:20px;
+}
+
+.modalTitle{
+  font-size:26px;
+  color:#ffd36b;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
 </style>
 </head>
 <body>
 <div id="toast" class="toast"></div>
+
+<div id="completeModal" class="modal" onclick="closeCompleteModal()">
+  <div class="modalBox">
+    <div class="modalTitle">🎉 繁殖完了！</div>
+
+    <img id="completeImg" src="IMG_5849.png">
+
+    <div id="completeText"
+         style="font-weight:900;margin-top:12px;">
+    </div>
+
+    <button onclick="closeCompleteModal()">
+      閉じる
+    </button>
+  </div>
+</div>
 
 <div class="app">
 <h1>Once Human 繁殖管理</h1>
@@ -264,7 +325,10 @@ x.completed=true;
 data.doneHistory.unshift({tamer:tm.name,type:x.type,name:x.name,sex:x.sex,rank:x.rank,breedCount:x.breedCount,rare:x.rare,trait:x.trait,time:new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"})});
 data.stats[x.type]=(data.stats[x.type]||0)+1;
 data.dex[x.type]=true;
+
 showToast(x.name+" の繁殖が完了しました！");
+showCompleteModal(x);
+beep();
 save();
 }
 }));
@@ -274,6 +338,62 @@ function showToast(text){
 toast.textContent=text;
 toast.style.display="block";
 setTimeout(()=>toast.style.display="none",5000);
+}
+
+function showCompleteModal(timer){
+
+  completeImg.src=imageOf(timer.type);
+
+  completeText.innerHTML=
+    timer.name+
+    "（"+timer.type+"）<br>"+
+    (timer.rare ? "✨ レア柄 ✨<br>" : "")+
+    "繁殖が完了しました！";
+
+  completeModal.style.display="flex";
+}
+
+function closeCompleteModal(){
+  completeModal.style.display="none";
+}
+
+function showCompleteModal(timer){
+
+  completeImg.src=imageOf(timer.type);
+
+  completeText.innerHTML=
+    timer.name+
+    "（"+timer.type+"）<br>"+
+    (timer.rare ? "✨ レア柄 ✨<br>" : "")+
+    "繁殖が完了しました！";
+
+  completeModal.style.display="flex";
+}
+
+function closeCompleteModal(){
+  completeModal.style.display="none";
+}
+
+function beep(){
+  try{
+    let c=new AudioContext();
+    let o=c.createOscillator();
+    let g=c.createGain();
+
+    o.connect(g);
+    g.connect(c.destination);
+
+    o.frequency.value=880;
+    g.gain.value=.08;
+
+    o.start();
+
+    setTimeout(()=>{
+      o.stop();
+      c.close();
+    },700);
+
+  }catch(e){}
 }
 
 function render(){
@@ -303,7 +423,7 @@ d.innerHTML='<div class="badge">'+(left<=0?'COMPLETE':'ACTIVE')+'</div>'+
 '<div class="timer">'+fmt(left)+'</div>'+
 '<div class="barWrap"><div class="bar" style="width:'+pct+'%"></div></div>'+
 '<div class="meta">種類：'+x.type+' ／ 性別：'+x.sex+' ／ ランク：'+x.rank+' ／ 繁殖回数：'+x.breedCount+'</div>'+
-(x.rare?'<div class="meta">レア柄：あり</div>':'')+
+(x.rare?'<div class="rareGlow">✨ レア柄 ✨</div>':'')+
 (x.trait?'<div class="meta">特性：'+x.trait+'</div>':'')+
 (x.memo?'<div class="meta">メモ：'+x.memo+'</div>':'')+
 '<div class="row"><button class="secondary" onclick="resetTimer('+x.id+')">再スタート</button><button class="delete" onclick="deleteTimer('+x.id+')">削除</button></div>';
