@@ -90,7 +90,7 @@ button{border:1px solid rgba(255,235,150,.75);font-weight:900;color:#fff3c4;back
 <div id="toast" class="toast"></div>
 
 <div id="completeModal" class="modal" onclick="closeCompleteModal()">
-  <div class="modalBox">
+  <div class="modalBox" onclick="event.stopPropagation()">
     <div class="modalTitle">🎉 繁殖完了！</div>
 
     <img id="completeImg" src="IMG_5849.png">
@@ -338,23 +338,6 @@ function showToast(text){
 toast.textContent=text;
 toast.style.display="block";
 setTimeout(()=>toast.style.display="none",5000);
-}
-
-function showCompleteModal(timer){
-
-  completeImg.src=imageOf(timer.type);
-
-  completeText.innerHTML=
-    timer.name+
-    "（"+timer.type+"）<br>"+
-    (timer.rare ? "✨ レア柄 ✨<br>" : "")+
-    "繁殖が完了しました！";
-
-  completeModal.style.display="flex";
-}
-
-function closeCompleteModal(){
-  completeModal.style.display="none";
 }
 
 function showCompleteModal(timer){
