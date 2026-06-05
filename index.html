@@ -52,7 +52,14 @@ button.delete{background:linear-gradient(180deg,#9b2f25,#4b0f0d);color:#ffd1c9}
 </div>
 <div class="card">
 <div class="badge">BREEDING TIMER</div>
-<select id="animalType"></select>
+<select id="animalType" onchange="updateAnimalPreview()"></select>
+
+<div style="text-align:center;margin:10px 0 14px;">
+  <img id="animalPreview"
+       src="IMG_5849.png"
+       style="width:120px;height:120px;object-fit:cover;border-radius:22px;border:2px solid #ffd36b;box-shadow:0 0 18px rgba(255,210,100,.55);">
+  <div id="animalPreviewName" style="font-weight:900;color:#ffd36b;margin-top:6px;">オオカミ</div>
+</div>
 <input id="animalName" placeholder="動物の名前を入力 例：白牙">
 <div class="row">
 <select id="sex">
@@ -137,8 +144,17 @@ return '<img src="'+imgOf(type)+'" alt="'+type+'">';
 }
 function setup(){
 animalType.innerHTML=animals.map(a=>'<option value="'+a[0]+'">'+a[0]+'</option>').join("");
+updateAnimalPreview();
 render();
 }
+function updateAnimalPreview(){
+let type=animalType.value;
+let found=animals.find(a=>a[0]===type);
+if(found){
+animalPreview.src=found[1];
+animalPreviewName.textContent=found[0];
+}
+}  
 function renderTabs(){
 tabs.innerHTML=data.tamers.map((t,i)=>{
 let name=t.name||("テイマー"+(i+1));
