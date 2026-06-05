@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Once Human 繁殖管理 V8.1</title>
+<title>Once Human 繁殖管理 V8 修正版</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f8e7b0;min-height:100vh;background:#050806}
@@ -39,30 +39,20 @@ button{border:1px solid rgba(255,235,150,.75);font-weight:900;color:#fff3c4;back
 .stat img,.dexItem img{width:44px;height:44px;border-radius:12px;object-fit:cover}
 .dexItem.locked{opacity:.45}
 .toast{position:fixed;top:18px;left:14px;right:14px;background:#0b3d2b;border:1px solid #ffd36b;padding:14px;border-radius:16px;text-align:center;display:none;z-index:10}
-.rareGlow{color:#ffd36b;font-weight:900;border:1px solid #ffd36b;background:rgba(255,210,80,.12);box-shadow:0 0 14px rgba(255,210,80,.5);border-radius:12px;padding:8px;margin-top:7px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
-.modalBox{max-width:360px;width:100%;text-align:center;background:linear-gradient(180deg,#1e7d55,#071b14);border:2px solid #ffd36b;border-radius:24px;padding:24px;box-shadow:0 0 35px rgba(255,210,80,.65)}
-.modalBox img{width:120px;height:120px;object-fit:cover;border-radius:22px;border:2px solid #ffd36b}
-.modalTitle{font-size:26px;font-weight:900;color:#ffd36b;margin:12px 0}
 </style>
 </head>
 <body>
 <div id="toast" class="toast"></div>
-<div id="completeModal" class="modal" onclick="closeCompleteModal()">
-  <div class="modalBox" onclick="event.stopPropagation()">
-    <div class="modalTitle">🎉 繁殖完了！</div>
-    <img id="completeImg" src="IMG_5849.png">
-    <div id="completeText" style="font-weight:900;margin-top:12px;"></div>
-    <button onclick="closeCompleteModal()">閉じる</button>
-  </div>
-</div>
+
 <div class="app">
 <h1>Once Human 繁殖管理</h1>
 <div class="sub">繁殖タイマー</div>
+
 <div class="card">
 <div class="badge">TAMER SELECT</div>
 <div class="tabs" id="tabs"></div>
 </div>
+
 <div class="card">
 <div class="badge">TAMER NAME</div>
 <input id="tamerName" placeholder="テイマー名を入力">
@@ -74,8 +64,10 @@ button{border:1px solid rgba(255,235,150,.75);font-weight:900;color:#fff3c4;back
 <option value="#7b3fd1">紫</option>
 </select>
 </div>
+
 <div class="card">
 <div class="badge">BREEDING TIMER</div>
+
 <select id="animalType">
 <option value="オオカミ">オオカミ</option>
 <option value="ヒョウ">ヒョウ</option>
@@ -94,17 +86,21 @@ button{border:1px solid rgba(255,235,150,.75);font-weight:900;color:#fff3c4;back
 <option value="ワニガメ">ワニガメ</option>
 <option value="ウミガメ">ウミガメ</option>
 </select>
+
 <div class="preview">
 <img id="animalPreview" src="IMG_5849.png">
 <div id="animalPreviewName">オオカミ</div>
 </div>
+
 <input id="animalName" placeholder="動物の名前を入力 例：金糸雀">
+
 <div class="row">
 <select id="sex">
 <option value="">性別</option>
 <option>オス</option>
 <option>メス</option>
 </select>
+
 <select id="rank">
 <option value="">ランク</option>
 <option>Sランク</option>
@@ -113,33 +109,30 @@ button{border:1px solid rgba(255,235,150,.75);font-weight:900;color:#fff3c4;back
 <option>Cランク</option>
 </select>
 </div>
+
 <textarea id="trait" placeholder="特性"></textarea>
+
 <select id="breedCount">
 <option value="">繁殖回数</option>
-<option>8回</option>
-<option>7回</option>
-<option>6回</option>
-<option>5回</option>
-<option>4回</option>
-<option>3回</option>
-<option>2回</option>
-<option>1回</option>
+<option>8回</option><option>7回</option><option>6回</option><option>5回</option>
+<option>4回</option><option>3回</option><option>2回</option><option>1回</option>
 </select>
 
-レア柄
+<label class="rare"><input type="checkbox" id="rarePattern"><span>レア柄</span></label>
 
 <textarea id="memo" placeholder="メモ 例：保管場所など"></textarea>
-
-このテイマーに追加
-
+<button id="addBtn">このテイマーに追加</button>
 <div class="small">各テイマー最大5匹まで登録できます。タイマーは24時間固定です。</div>
 </div>
+
 <div id="timerList"></div>
+
 <div class="card"><div class="badge">COMPLETE HISTORY</div><div id="historyBox"></div><button class="delete" id="clearHistoryBtn">履歴を消す</button></div>
 <div class="card"><div class="badge">BREEDING ENCYCLOPEDIA</div><div id="dexCount" class="small"></div><div id="dexBox" class="dex"></div></div>
 <div class="card"><div class="badge">STATS</div><div id="statsBox" class="stats"></div><button class="delete" id="clearStatsBtn">繁殖回数をリセット</button></div>
 <div class="card"><div class="badge">BACKUP</div><button id="exportBtn">データを書き出す</button><input type="file" id="importFile" accept="application/json"></div>
 </div>
+
 <script>
 const animals=[
 ["オオカミ","IMG_5849.png"],["ヒョウ","IMG_5850.png"],["クマ","IMG_5851.png"],["ホッキョクグマ","IMG_5852.png"],
@@ -147,8 +140,10 @@ const animals=[
 ["ウサギ","IMG_5857.png"],["カピバラ","IMG_5858.png"],["キツネ","IMG_5859.png"],["スノーフォックス","IMG_5860.png"],
 ["フラミンゴ","IMG_5861.png"],["ワニ","IMG_5862.png"],["ワニガメ","IMG_5863.png"],["ウミガメ","IMG_5864.png"]
 ];
-const KEY="oncehuman_v8_rare_modal";
+
+const KEY="oncehuman_v8_fixed_select";
 const DAY=24*3600000;
+
 let data=JSON.parse(localStorage.getItem(KEY)||"null")||{
 active:0,
 tamers:[
@@ -160,20 +155,25 @@ doneHistory:[],
 stats:{},
 dex:{}
 };
+
 let notified={};
+
 function save(){localStorage.setItem(KEY,JSON.stringify(data))}
 function activeTamer(){return data.tamers[data.active]}
 function imageOf(type){let f=animals.find(a=>a[0]===type);return f?f[1]:"IMG_5849.png"}
 function imageTag(type){return '<img src="'+imageOf(type)+'">'}
+
 function updateAnimalPreview(){
 let type=animalType.value;
 animalPreview.src=imageOf(type);
 animalPreviewName.textContent=type;
 }
+
 function renderTabs(){
 tabs.innerHTML=data.tamers.map((t,i)=>{
 return '<button class="'+(i===data.active?'active':'')+'" style="background:linear-gradient(180deg,'+t.color+',rgba(0,0,0,.65))" data-index="'+i+'">'+t.name+'<br>'+t.timers.length+'/5</button>';
 }).join("");
+
 tabs.querySelectorAll("button").forEach(btn=>{
 btn.onclick=function(){
 data.active=Number(this.dataset.index);
@@ -182,31 +182,39 @@ render();
 };
 });
 }
+
 function setup(){
 animalType.onchange=updateAnimalPreview;
 updateAnimalPreview();
+
 tamerName.oninput=function(){
 activeTamer().name=this.value.trim()||("テイマー"+(data.active+1));
 save();
 renderTabs();
 };
+
 tamerColor.onchange=function(){
 activeTamer().color=this.value;
 save();
 render();
 };
+
 addBtn.onclick=addTimer;
 clearHistoryBtn.onclick=function(){data.doneHistory=[];save();render()};
 clearStatsBtn.onclick=function(){data.stats={};data.dex={};save();render()};
 exportBtn.onclick=exportData;
 importFile.onchange=importData;
+
 render();
 }
+
 function addTimer(){
 let t=activeTamer();
 if(t.timers.length>=5){alert("このテイマーは5匹までです");return}
 if(!breedCount.value){alert("繁殖回数を選んでください");return}
+
 let type=animalType.value;
+
 t.timers.push({
 id:Date.now(),
 type:type,
@@ -220,28 +228,34 @@ memo:memo.value.trim(),
 end:Date.now()+DAY,
 completed:false
 });
+
 animalName.value="";
 trait.value="";
 memo.value="";
 rarePattern.checked=false;
 breedCount.value="";
+
 save();
 render();
 }
+
 function deleteTimer(id){
 activeTamer().timers=activeTamer().timers.filter(t=>t.id!==id);
 save();render();
 }
+
 function resetTimer(id){
 activeTamer().timers=activeTamer().timers.map(t=>t.id===id?{...t,end:Date.now()+DAY,completed:false}:t);
 notified[id]=false;
 save();render();
 }
+
 function fmt(ms){
 if(ms<=0)return"完了！";
 let s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
 return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0");
 }
+
 function checkComplete(){
 data.tamers.forEach(tm=>tm.timers.forEach(x=>{
 let left=x.end-Date.now();
@@ -251,49 +265,34 @@ data.doneHistory.unshift({tamer:tm.name,type:x.type,name:x.name,sex:x.sex,rank:x
 data.stats[x.type]=(data.stats[x.type]||0)+1;
 data.dex[x.type]=true;
 showToast(x.name+" の繁殖が完了しました！");
-showCompleteModal(x);
-beep();
 save();
 }
 }));
 }
-function beep(){
-try{
-let c=new AudioContext(),o=c.createOscillator(),g=c.createGain();
-o.connect(g);g.connect(c.destination);
-o.frequency.value=880;g.gain.value=.09;
-o.start();
-setTimeout(()=>{o.stop();c.close()},700);
-if(navigator.vibrate)navigator.vibrate([300,120,300]);
-}catch(e){}
-}
+
 function showToast(text){
 toast.textContent=text;
 toast.style.display="block";
 setTimeout(()=>toast.style.display="none",5000);
 }
-function showCompleteModal(timer){
-completeImg.src=imageOf(timer.type);
-completeText.innerHTML=timer.name+"（"+timer.type+"）<br>"+(timer.rare?"✨ レア柄 ✨<br>":"")+"繁殖が完了しました！";
-completeModal.style.display="flex";
-}
-function closeCompleteModal(){
-completeModal.style.display="none";
-}
+
 function render(){
 renderTabs();
 if(document.activeElement!==tamerName)tamerName.value=activeTamer().name;
 if(document.activeElement!==tamerColor)tamerColor.value=activeTamer().color;
+
 checkComplete();
 renderTimers();
 renderHistory();
 renderDex();
 renderStats();
 }
+
 function renderTimers(){
 timerList.innerHTML="";
 let t=activeTamer();
 if(!t.timers.length){timerList.innerHTML='<div class="card small">このテイマーのタイマーはまだありません。</div>';return}
+
 t.timers.forEach(x=>{
 let left=x.end-Date.now();
 let pct=Math.max(0,Math.min(100,(left/DAY)*100));
@@ -304,25 +303,29 @@ d.innerHTML='<div class="badge">'+(left<=0?'COMPLETE':'ACTIVE')+'</div>'+
 '<div class="timer">'+fmt(left)+'</div>'+
 '<div class="barWrap"><div class="bar" style="width:'+pct+'%"></div></div>'+
 '<div class="meta">種類：'+x.type+' ／ 性別：'+x.sex+' ／ ランク：'+x.rank+' ／ 繁殖回数：'+x.breedCount+'</div>'+
-(x.rare?'<div class="rareGlow">✨ レア柄 ✨</div>':'')+
+(x.rare?'<div class="meta">レア柄：あり</div>':'')+
 (x.trait?'<div class="meta">特性：'+x.trait+'</div>':'')+
 (x.memo?'<div class="meta">メモ：'+x.memo+'</div>':'')+
 '<div class="row"><button class="secondary" onclick="resetTimer('+x.id+')">再スタート</button><button class="delete" onclick="deleteTimer('+x.id+')">削除</button></div>';
 timerList.appendChild(d);
 });
 }
+
 function renderHistory(){
-historyBox.innerHTML=data.doneHistory.length?data.doneHistory.map(h=>'<div class="historyItem">'+imageTag(h.type)+' '+h.tamer+'：'+h.name+'（'+h.type+'） '+h.sex+' '+h.rank+' '+h.breedCount+' '+(h.rare?'✨レア柄 ':'')+h.time+' 完了</div>').join(""):'<div class="small">完了履歴はまだありません。</div>';
+historyBox.innerHTML=data.doneHistory.length?data.doneHistory.map(h=>'<div class="historyItem">'+imageTag(h.type)+' '+h.tamer+'：'+h.name+'（'+h.type+'） '+h.sex+' '+h.rank+' '+h.breedCount+' '+(h.rare?'レア柄 ':'')+h.time+' 完了</div>').join(""):'<div class="small">完了履歴はまだありません。</div>';
 }
+
 function renderDex(){
 let done=animals.filter(a=>data.dex[a[0]]).length;
 dexCount.textContent="図鑑 "+done+"/16";
 dexBox.innerHTML=animals.map(a=>'<div class="dexItem '+(data.dex[a[0]]?'':'locked')+'">'+imageTag(a[0])+'<br>'+(data.dex[a[0]]?'✅ ':'⬜ ')+a[0]+'</div>').join("");
 }
+
 function renderStats(){
 let keys=Object.keys(data.stats);
 statsBox.innerHTML=keys.length?keys.map(k=>'<div class="stat">'+imageTag(k)+'<br>'+k+'<br><b>'+data.stats[k]+'回</b></div>').join(""):'<div class="small">繁殖回数はまだありません。</div>';
 }
+
 function exportData(){
 let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
 let a=document.createElement("a");
@@ -330,6 +333,7 @@ a.href=URL.createObjectURL(blob);
 a.download="oncehuman-backup.json";
 a.click();
 }
+
 function importData(e){
 let f=e.target.files[0];
 if(!f)return;
@@ -339,6 +343,7 @@ try{data=JSON.parse(r.result);save();render();alert("読み込みました")}cat
 };
 r.readAsText(f);
 }
+
 setup();
 setInterval(render,1000);
 </script>
