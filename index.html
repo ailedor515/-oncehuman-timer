@@ -1,33 +1,140 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="繁殖管理"><title>Once Human 繁殖管理</title>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="繁殖管理">
+<title>Once Human 繁殖管理</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f8e7b0;min-height:100vh;background:#050806}body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.9)),url("C6B5C7E6-C0A5-4D30-9AB6-24B33C4FDD14.png") center/cover no-repeat;z-index:-2}body:after{content:"";position:fixed;inset:0;background:radial-gradient(circle at center,transparent 15%,rgba(0,0,0,.75) 100%);backdrop-filter:blur(2px);z-index:-1}.app{max-width:560px;margin:0 auto;padding:34px 14px 90px}h1{text-align:center;font-size:34px;margin:20px 0 6px;color:#ffd36b;text-shadow:0 0 14px rgba(255,195,64,.9),0 4px 10px #000}.sub{text-align:center;color:#f5deb0;margin-bottom:22px;letter-spacing:2px}.card{background:linear-gradient(180deg,rgba(5,15,12,.86),rgba(0,0,0,.82));border:1px solid rgba(255,210,100,.6);border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 0 18px rgba(255,180,40,.16),inset 0 0 18px rgba(0,255,160,.06)}.badge{display:inline-block;padding:5px 10px;border:1px solid rgba(0,255,160,.55);color:#86ffc4;border-radius:999px;font-size:12px;margin-bottom:10px}input,select,textarea,button{width:100%;font-size:16px;border-radius:12px;padding:13px;margin-bottom:10px}input,select,textarea{background:rgba(0,0,0,.72);color:#ffe9b5;border:1px solid rgba(255,210,100,.65)}textarea{min-height:70px}button{border:1px solid rgba(255,235,150,.75);font-weight:900;color:#fff3c4;background:linear-gradient(180deg,#c99635,#7c4b10);box-shadow:0 0 16px rgba(255,195,64,.35)}button:active{transform:scale(.98)}button.secondary{background:linear-gradient(180deg,#1e7d55,#0b3d2b);color:#baffd7}button.delete{background:linear-gradient(180deg,#9b2f25,#4b0f0d);color:#ffd1c9}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}.grid button{font-size:13px;padding:11px 6px;margin:0}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.timer{font-size:40px;font-weight:900;text-align:center;margin:10px 0;color:#ffd36b;text-shadow:0 0 14px rgba(255,200,70,.75)}.name{font-size:21px;font-weight:900;color:#fff0c0}.done{color:#84ffb5}.small{font-size:13px;color:#e8d6a8;text-align:center;line-height:1.6}.barWrap{height:12px;background:#151515;border-radius:999px;overflow:hidden;border:1px solid rgba(255,210,100,.35);margin:12px 0}.bar{height:100%;background:linear-gradient(90deg,#00ff99,#ffd36b);box-shadow:0 0 12px rgba(0,255,160,.8)}.percent{text-align:right;font-size:12px;color:#9effc9}.meta,.historyItem{font-size:14px;border-top:1px solid rgba(255,210,100,.25);padding:8px 0;color:#f5deb0}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:rgba(0,0,0,.45);border:1px solid rgba(255,210,100,.35);border-radius:12px;padding:10px;text-align:center}
-</style></head><body><div class="app"><h1>Once Human 繁殖管理</h1><div class="sub">24時間繁殖タイマー</div>
-<div class="card"><div class="badge">ANIMAL PRESET</div><div class="grid" id="preset"></div><div class="badge">BREEDING TIMER</div><input id="animalName" placeholder="動物名を入力"><select id="sex"><option>未設定</option><option>オス</option><option>メス</option></select><select id="generation"><option>第1世代</option><option>第2世代</option><option>第3世代</option><option>第4世代</option><option>第5世代以上</option></select><select id="hours"><option value="24">24時間</option><option value="12">12時間</option><option value="6">6時間</option><option value="3">3時間</option><option value="1">1時間</option></select><textarea id="memo" placeholder="メモ 例：高ランク、親候補、変異あり"></textarea><button onclick="addTimer()">タイマー追加</button></div>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f8e7b0;min-height:100vh;background:#050806}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.9)),url("C6B5C7E6-C0A5-4D30-9AB6-24B33C4FDD14.png") center/cover no-repeat;z-index:-2}
+body:after{content:"";position:fixed;inset:0;background:radial-gradient(circle at center,transparent 15%,rgba(0,0,0,.75) 100%);backdrop-filter:blur(2px);z-index:-1}
+.app{max-width:560px;margin:0 auto;padding:34px 14px 90px}
+h1{text-align:center;font-size:34px;margin:20px 0 6px;color:#ffd36b;text-shadow:0 0 14px rgba(255,195,64,.9),0 4px 10px #000}
+.sub{text-align:center;color:#f5deb0;margin-bottom:22px;letter-spacing:2px}
+.card{background:linear-gradient(180deg,rgba(5,15,12,.86),rgba(0,0,0,.82));border:1px solid rgba(255,210,100,.6);border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 0 18px rgba(255,180,40,.16),inset 0 0 18px rgba(0,255,160,.06)}
+.badge{display:inline-block;padding:5px 10px;border:1px solid rgba(0,255,160,.55);color:#86ffc4;border-radius:999px;font-size:12px;margin-bottom:10px}
+input,select,textarea,button{width:100%;font-size:16px;border-radius:12px;padding:13px;margin-bottom:10px}
+input,select,textarea{background:rgba(0,0,0,.72);color:#ffe9b5;border:1px solid rgba(255,210,100,.65)}
+textarea{min-height:70px}
+button{border:1px solid rgba(255,235,150,.75);font-weight:900;color:#fff3c4;background:linear-gradient(180deg,#c99635,#7c4b10);box-shadow:0 0 16px rgba(255,195,64,.35)}
+button:active{transform:scale(.98)}
+button.secondary{background:linear-gradient(180deg,#1e7d55,#0b3d2b);color:#baffd7}
+button.delete{background:linear-gradient(180deg,#9b2f25,#4b0f0d);color:#ffd1c9}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+.animalBtn{padding:8px;margin:0;display:flex;align-items:center;gap:8px;justify-content:flex-start;text-align:left}
+.animalBtn img{width:44px;height:44px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,230,160,.8)}
+.animalBtn span{font-size:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.timer{font-size:40px;font-weight:900;text-align:center;margin:10px 0;color:#ffd36b;text-shadow:0 0 14px rgba(255,200,70,.75)}
+.name{font-size:21px;font-weight:900;color:#fff0c0;display:flex;align-items:center;gap:10px}
+.name img{width:42px;height:42px;border-radius:12px;object-fit:cover}
+.done{color:#84ffb5}
+.small{font-size:13px;color:#e8d6a8;text-align:center;line-height:1.6}
+.barWrap{height:12px;background:#151515;border-radius:999px;overflow:hidden;border:1px solid rgba(255,210,100,.35);margin:12px 0}
+.bar{height:100%;background:linear-gradient(90deg,#00ff99,#ffd36b);box-shadow:0 0 12px rgba(0,255,160,.8)}
+.percent{text-align:right;font-size:12px;color:#9effc9}
+.meta,.historyItem{font-size:14px;border-top:1px solid rgba(255,210,100,.25);padding:8px 0;color:#f5deb0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:rgba(0,0,0,.45);border:1px solid rgba(255,210,100,.35);border-radius:12px;padding:10px;text-align:center}
+.stat img{width:46px;height:46px;border-radius:12px;object-fit:cover}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Once Human 繁殖管理</h1>
+<div class="sub">24時間繁殖タイマー</div>
+<div class="card">
+<div class="badge">ANIMAL PRESET</div>
+<div class="grid" id="preset"></div>
+<div class="badge">BREEDING TIMER</div>
+<input id="animalName" placeholder="動物名を入力">
+<select id="sex"><option>未設定</option><option>オス</option><option>メス</option></select>
+<select id="generation"><option>第1世代</option><option>第2世代</option><option>第3世代</option><option>第4世代</option><option>第5世代以上</option></select>
+<select id="hours"><option value="24">24時間</option><option value="12">12時間</option><option value="6">6時間</option><option value="3">3時間</option><option value="1">1時間</option></select>
+<textarea id="memo" placeholder="メモ 例：高ランク、親候補、変異あり"></textarea>
+<button onclick="addTimer()">タイマー追加</button>
+</div>
 <div id="list"></div>
 <div class="card"><div class="badge">COMPLETE HISTORY</div><div id="history"></div><button class="delete" onclick="clearHistory()">履歴を消す</button></div>
 <div class="card"><div class="badge">STATS</div><div id="stats" class="stats"></div><button class="delete" onclick="clearStats()">繁殖回数をリセット</button></div>
-<div class="card small">Safariで開いたら、共有ボタン →「ホーム画面に追加」でアプリ風に使えます。</div></div>
+<div class="card small">Safariで開いたら、共有ボタン →「ホーム画面に追加」でアプリ風に使えます。</div>
+</div>
 <script>
-const animals=[["オオカミ","🐺"],["ヒョウ","🐆"],["クマ","🐻"],["ホッキョクグマ","🐻‍❄️"],["イノシシ","🐗"],["バッファロー","🦬"],["シカ","🦌"],["ヒツジ","🐑"],["ウサギ","🐰"],["カピバラ","🦫"],["キツネ","🦊"],["スノーフォックス","❄️🦊"],["フラミンゴ","🦩"],["ワニ","🐊"],["ワニガメ","🐢"],["ウミガメ","🌊🐢"]];
-const T="oncehuman_timers_v5",H="oncehuman_history_v5",S="oncehuman_stats_v5";
-let timers=JSON.parse(localStorage.getItem(T)||"[]"),history=JSON.parse(localStorage.getItem(H)||"[]"),stats=JSON.parse(localStorage.getItem(S)||"{}"),notified={};
-function save(){localStorage.setItem(T,JSON.stringify(timers));localStorage.setItem(H,JSON.stringify(history));localStorage.setItem(S,JSON.stringify(stats))}
-function icon(n){let a=animals.find(x=>n.includes(x[0]));return a?a[1]:"🐾"}
+const animals=[
+["オオカミ","IMG_5849.png"],["ヒョウ","IMG_5850.png"],["クマ","IMG_5851.png"],["ホッキョクグマ","IMG_5852.png"],
+["イノシシ","IMG_5853.png"],["バッファロー","IMG_5854.png"],["シカ","IMG_5855.png"],["ヒツジ","IMG_5856.png"],
+["ウサギ","IMG_5857.png"],["カピバラ","IMG_5858.png"],["キツネ","IMG_5859.png"],["スノーフォックス","IMG_5860.png"],
+["フラミンゴ","IMG_5861.png"],["ワニ","IMG_5862.png"],["ワニガメ","IMG_5863.png"],["ウミガメ","IMG_5864.png"]
+];
+const T="oncehuman_timers_v6",H="oncehuman_history_v6",S="oncehuman_stats_v6";
+let timers=JSON.parse(localStorage.getItem(T)||"[]");
+let history=JSON.parse(localStorage.getItem(H)||"[]");
+let statData=JSON.parse(localStorage.getItem(S)||"{}");
+let notified={};
+function save(){localStorage.setItem(T,JSON.stringify(timers));localStorage.setItem(H,JSON.stringify(history));localStorage.setItem(S,JSON.stringify(statData))}
+function imgOf(n){let a=animals.find(x=>n.includes(x[0]));return a?a[1]:"IMG_5849.png"}
+function imgTag(n){return `<img src="${imgOf(n)}" alt="${n}">`}
 function setAnimal(n){animalName.value=n}
-function addTimer(){let name=animalName.value.trim(),h=+hours.value;if(!name){alert("動物名を入力してください");return}timers.push({id:Date.now(),name,sex:sex.value,gen:generation.value,memo:memo.value,end:Date.now()+h*3600000,hours:h,completed:false});animalName.value="";memo.value="";save();render()}
+function addTimer(){
+let name=animalName.value.trim(),h=+hours.value;
+if(!name){alert("動物名を入力してください");return}
+timers.push({id:Date.now(),name,sex:sex.value,gen:generation.value,memo:memo.value,end:Date.now()+h*3600000,hours:h,completed:false});
+animalName.value="";memo.value="";save();render()
+}
 function delTimer(id){timers=timers.filter(t=>t.id!==id);save();render()}
 function resetTimer(id){timers=timers.map(t=>t.id===id?{...t,end:Date.now()+t.hours*3600000,completed:false}:t);notified[id]=false;save();render()}
-function clearHistory(){history=[];save();render()}function clearStats(){stats={};save();render()}
+function clearHistory(){history=[];save();render()}
+function clearStats(){statData={};save();render()}
 function fmt(ms){if(ms<=0)return"完了！";let s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`}
 function nowText(){let d=new Date();return`${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`}
-function beep(){try{let c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.09;o.start();setTimeout(()=>{o.stop();c.close()},700);if(navigator.vibrate)navigator.vibrate([300,120,300])}catch(e){}}
-function renderPreset(){preset.innerHTML=animals.map(a=>`<button onclick="setAnimal('${a[0]}')">${a[1]} ${a[0]}</button>`).join("")}
-function render(){list.innerHTML="";history.innerHTML="";stats.innerHTML="";
-timers.forEach(t=>{let left=t.end-Date.now();if(left<=0&&!t.completed){t.completed=true;history.unshift({name:t.name,sex:t.sex,gen:t.gen,time:nowText()});stats[t.name]=(stats[t.name]||0)+1;if(history.length>20)history=history.slice(0,20);if(!notified[t.id]){notified[t.id]=true;beep()}save()}});
-if(!timers.length)list.innerHTML='<div class="card small">まだタイマーがありません。</div>';
-timers.forEach(t=>{let left=t.end-Date.now(),total=t.hours*3600000,pct=Math.max(0,Math.min(100,(left/total)*100)),d=document.createElement("div");d.className="card";d.innerHTML=`<div class="badge">${left<=0?"COMPLETE":"ACTIVE"}</div><div class="name">${icon(t.name)} ${t.name}</div><div class="timer ${left<=0?"done":""}">${fmt(left)}</div><div class="barWrap"><div class="bar" style="width:${pct}%"></div></div><div class="percent">残り ${Math.round(pct)}%</div><div class="meta">性別：${t.sex} ／ 世代：${t.gen}</div>${t.memo?`<div class="meta">メモ：${t.memo}</div>`:""}<div class="row"><button class="secondary" onclick="resetTimer(${t.id})">再スタート</button><button class="delete" onclick="delTimer(${t.id})">削除</button></div>`;list.appendChild(d)});
-history.innerHTML=history.length?history.map(h=>`<div class="historyItem">${icon(h.name)} ${h.name}　${h.sex}　${h.gen}　${h.time} 完了</div>`).join(""):'<div class="small">完了履歴はまだありません。</div>';
-let keys=Object.keys(stats);stats.innerHTML=keys.length?keys.map(k=>`<div class="stat">${icon(k)}<br>${k}<br><b>${stats[k]}回</b></div>`).join(""):'<div class="small">繁殖回数はまだありません。</div>';
+function beep(){
+try{
+let c=new AudioContext(),o=c.createOscillator(),g=c.createGain();
+o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.09;o.start();
+setTimeout(()=>{o.stop();c.close()},700);
+if(navigator.vibrate)navigator.vibrate([300,120,300])
+}catch(e){}
 }
-renderPreset();setInterval(render,1000);render();
-</script></body></html>
+function renderPreset(){
+preset.innerHTML=animals.map(a=>`<button class="animalBtn" onclick="setAnimal('${a[0]}')"><img src="${a[1]}" alt="${a[0]}"><span>${a[0]}</span></button>`).join("")
+}
+function render(){
+list.innerHTML="";history.innerHTML="";stats.innerHTML="";
+timers.forEach(t=>{
+let left=t.end-Date.now();
+if(left<=0&&!t.completed){
+t.completed=true;
+history.unshift({name:t.name,sex:t.sex,gen:t.gen,time:nowText()});
+statData[t.name]=(statData[t.name]||0)+1;
+if(history.length>20)history=history.slice(0,20);
+if(!notified[t.id]){notified[t.id]=true;beep()}
+save()
+}
+});
+if(!timers.length)list.innerHTML='<div class="card small">まだタイマーがありません。</div>';
+timers.forEach(t=>{
+let left=t.end-Date.now(),total=t.hours*3600000,pct=Math.max(0,Math.min(100,(left/total)*100)),d=document.createElement("div");
+d.className="card";
+d.innerHTML=`<div class="badge">${left<=0?"COMPLETE":"ACTIVE"}</div>
+<div class="name">${imgTag(t.name)} ${t.name}</div>
+<div class="timer ${left<=0?"done":""}">${fmt(left)}</div>
+<div class="barWrap"><div class="bar" style="width:${pct}%"></div></div>
+<div class="percent">残り ${Math.round(pct)}%</div>
+<div class="meta">性別：${t.sex} ／ 世代：${t.gen}</div>
+${t.memo?`<div class="meta">メモ：${t.memo}</div>`:""}
+<div class="row"><button class="secondary" onclick="resetTimer(${t.id})">再スタート</button><button class="delete" onclick="delTimer(${t.id})">削除</button></div>`;
+list.appendChild(d)
+});
+history.innerHTML=history.length?history.map(h=>`<div class="historyItem">${imgTag(h.name)} ${h.name}　${h.sex}　${h.gen}　${h.time} 完了</div>`).join(""):'<div class="small">完了履歴はまだありません。</div>';
+let keys=Object.keys(statData);
+stats.innerHTML=keys.length?keys.map(k=>`<div class="stat">${imgTag(k)}<br>${k}<br><b>${statData[k]}回</b></div>`).join(""):'<div class="small">繁殖回数はまだありません。</div>';
+}
+renderPreset();
+setInterval(render,1000);
+render();
+</script>
+</body>
+</html>
